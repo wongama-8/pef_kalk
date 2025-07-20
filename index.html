@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Benefits Illustrator</title>
-    <!-- Chosen Palette: Warm Neutrals (Calm Teal, Beige, Dark Gray) -->
-    <!-- Application Structure Plan: The application is a generic illustrator. It has a primary input section for all client and policy details, a secondary interaction for the FlexIncome split, and a clear output section for the calculated benefits (Maturity & FlexIncome). This structure is task-oriented, allowing an agent to quickly input a client's scenario and get an immediate, accurate calculation of guaranteed benefits based on the provided business rules. -->
-    <!-- Visualization & Content Choices: Report Info: FlexIncome & Maturity Benefit rules. Goal: Calculate guaranteed outcomes based on user inputs. Viz/Presentation: Clean input forms and dynamic KPI cards for output. Interaction: User fills in policy details (term, premium, etc.). The app auto-calculates and displays the full FlexIncome schedule with RM values. The Maturity Benefit is a manual input for accuracy. Justification: This provides immediate, accurate feedback for financial planning discussions. The slider for FlexIncome allocation is kept to demonstrate the product's core feature conceptually. NO SVG/Mermaid used. No chart is used to avoid showing non-specific, potentially inaccurate projections. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -70,9 +66,9 @@
             transition: background-color 0.2s;
             border: 2px solid #FDF8F0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10+ */
-            user-select: none; /* Standard */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .reinvest-btn:hover {
             background-color: #3a7580;
@@ -94,6 +90,19 @@
             outline: none;
             border-bottom-color: white;
         }
+        /* Section Separation */
+        .section-alt {
+            background-color: #F9FAFB; /* Very light gray */
+        }
+        /* Animation for updated values */
+        @keyframes flash {
+            0% { background-color: transparent; }
+            25% { background-color: rgba(74, 144, 158, 0.2); }
+            100% { background-color: transparent; }
+        }
+        .flash-update {
+            animation: flash 1s ease-out;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -104,9 +113,9 @@
         </div>
     </header>
 
-    <main class="container mx-auto p-4 md:p-8">
+    <main class="container mx-auto">
 
-        <section id="calculator-input" class="mb-12">
+        <section id="calculator-input" class="py-8 md:py-12">
             <h3 class="text-2xl font-bold text-center mb-8">Part 1: Client & Policy Details</h3>
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -189,14 +198,14 @@
             </div>
         </section>
         
-        <section id="how-it-works" class="mb-12 bg-white rounded-lg shadow-lg p-8">
-            <h3 class="text-2xl font-bold text-center mb-2">Part 2: FlexIncome Allocation & Breakdown</h3>
-             <p class="text-md text-gray-600 max-w-3xl mx-auto text-center mb-8">
-                Customise your FlexIncome
-            </p>
-            <div class="max-w-3xl mx-auto">
+        <section id="how-it-works" class="py-8 md:py-12 section-alt">
+            <div class="max-w-3xl mx-auto px-4">
+                <h3 class="text-2xl font-bold text-center mb-2">Part 2: FlexIncome Allocation & Breakdown</h3>
+                <p class="text-md text-gray-600 max-w-3xl mx-auto text-center mb-8">
+                    Customise your FlexIncome
+                </p>
                 <div class="flex justify-between items-stretch gap-4">
-                    <div class="w-1/2 bg-gray-50 p-4 rounded-lg text-center flex flex-col justify-between">
+                    <div class="w-1/2 bg-white p-4 rounded-lg text-center flex flex-col justify-between shadow">
                         <div>
                             <h4 class="font-bold text-lg text-[#4A909E]">💰 Regular payout to you</h4>
                             <p class="text-2xl font-bold" id="payoutValue">RM 0</p>
@@ -206,7 +215,7 @@
                         </div>
                         <p class="text-sm text-gray-600 mt-2">Total Received: <span id="totalPayoutValue" class="font-bold">RM 0</span></p>
                     </div>
-                    <div class="w-1/2 bg-gray-50 p-4 rounded-lg text-center flex flex-col justify-between">
+                    <div class="w-1/2 bg-white p-4 rounded-lg text-center flex flex-col justify-between shadow">
                         <div>
                             <h4 class="font-bold text-lg text-[#4A909E]">📈 Reinvest for Growth</h4>
                             <p class="text-2xl font-bold" id="reinvestValue">RM 0</p>
@@ -231,9 +240,9 @@
             </div>
         </section>
 
-        <section id="maturity-benefit" class="mb-12">
+        <section id="maturity-benefit" class="py-8 md:py-12">
              <h3 class="text-2xl font-bold text-center mb-8">Part 3: Your Policy Benefits</h3>
-             <div class="max-w-2xl mx-auto space-y-6">
+             <div class="max-w-2xl mx-auto space-y-6 px-4">
                 <div class="bg-teal-50 p-6 rounded-lg text-center border-2 border-dashed border-[#4A909E]">
                     <h4 class="text-[#4A909E] font-semibold">Guaranteed Maturity Benefit</h4>
                     <p id="guaranteedMaturityValue" class="text-3xl font-bold text-teal-800 mt-2">RM 0</p>
@@ -252,33 +261,35 @@
              </div>
         </section>
 
-        <section id="maturity-projections" class="mb-12">
-            <h3 class="text-2xl font-bold text-center mb-8">Part 4: Summary of Your Potential Maturity Payout</h3>
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
-                <p class="text-center text-gray-600 mb-6">The values below are projections that include your Guaranteed Maturity Benefit plus a non-guaranteed amount based on different fund performance scenarios.*</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="scenarioX" class="form-label text-center">Projected Payout (Low Scenario)</label>
-                        <div class="relative mt-1">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">RM</span>
-                            <input type="text" id="scenarioX" class="form-input text-center font-bold text-xl" value="">
+        <section id="maturity-projections" class="py-8 md:py-12 section-alt">
+            <div class="max-w-4xl mx-auto px-4">
+                <h3 class="text-2xl font-bold text-center mb-8">Part 4: Summary of Your Potential Maturity Payout</h3>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <p class="text-center text-gray-600 mb-6">The values below are projections that include your Guaranteed Maturity Benefit plus a non-guaranteed amount based on different fund performance scenarios.*</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="scenarioX" class="form-label text-center">Projected Payout (Low Scenario)</label>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">RM</span>
+                                <input type="text" id="scenarioX" class="form-input text-center font-bold text-xl" value="">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="scenarioY" class="form-label text-center">Projected Payout (High Scenario)</label>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">RM</span>
+                                <input type="text" id="scenarioY" class="form-input text-center font-bold text-xl" value="">
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <label for="scenarioY" class="form-label text-center">Projected Payout (High Scenario)</label>
-                        <div class="relative mt-1">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">RM</span>
-                            <input type="text" id="scenarioY" class="form-input text-center font-bold text-xl" value="">
-                        </div>
-                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-6">*The non-guaranteed amount is dependent on the performance of the underlying investment-linked funds. Please refer to the official Product Illustration for details.</p>
                 </div>
-                 <p class="text-center text-xs text-gray-500 mt-6">*The non-guaranteed amount is dependent on the performance of the underlying investment-linked funds. Please refer to the official Product Illustration for details.</p>
             </div>
         </section>
 
-        <section id="legacy-planning" class="mb-12">
+        <section id="legacy-planning" class="py-8 md:py-12">
             <h3 class="text-2xl font-bold text-center mb-8">Part 5: A Legacy for Generations</h3>
-            <div class="max-w-4xl mx-auto space-y-8">
+            <div class="max-w-4xl mx-auto space-y-8 px-4">
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <div class="flex items-start mb-4">
                         <div class="text-3xl mr-4">🎁</div>
@@ -356,48 +367,49 @@
             </div>
         </section>
 
-        <!-- PART 6: UPDATED SECTION (VERSION 10.7) -->
-        <section id="safety-net">
-            <h3 class="text-2xl font-bold text-center mb-8">Part 6: In Case of the Unexpected</h3>
-            <div class="bg-white p-6 pb-10 rounded-lg shadow-lg max-w-4xl mx-auto">
-                <div class="text-center mb-6">
-                    <p class="font-semibold text-lg">In the unfortunate event of death before the policy matures (at <span id="maturityAgeText">Age 80</span>)...</p>
-                    <div class="mt-4 inline-flex items-center">
-                        <span class="text-2xl mr-2">🤔</span>
-                        <p class="font-bold text-gray-700">Is there an Alternate Life Assured appointed?</p>
-                    </div>
-                </div>
-                <div class="flex justify-center mt-2">
-                    <div class="w-px bg-gray-300 h-6"></div>
-                </div>
-                <div class="flex justify-center mt-2">
-                    <div class="w-2/3 h-px bg-gray-300"></div>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6 mt-2">
-                    <div class="text-center">
-                        <div class="w-px bg-gray-300 h-6 mx-auto"></div>
-                        <div class="bg-red-100 border-2 border-dashed border-red-300 rounded-lg p-4 h-full">
-                            <p class="font-bold text-red-700">NO</p>
-                            <div class="text-3xl my-2">❤️</div>
-                            <h4 class="font-bold text-lg text-red-800">Death Benefit is Payable</h4>
-                            <p class="text-xs text-gray-600 mt-2">The HIGHER of:</p>
-                            <ul class="text-xs text-left mt-2 space-y-1 list-disc list-inside">
-                                <li>105% of Total Basic Premium Paid (less FlexIncome paid OR</li>
-                                <li>Guaranteed Surrender Value</li>
-                            </ul>
-                            <p class="text-xs text-gray-600 mt-1">+ Investment Account Value (if any)</p>
+        <section id="safety-net" class="py-8 md:py-12 section-alt">
+            <div class="max-w-4xl mx-auto px-4">
+                <h3 class="text-2xl font-bold text-center mb-8">Part 6: In Case of the Unexpected</h3>
+                <div class="bg-white p-6 pb-10 rounded-lg shadow-lg">
+                    <div class="text-center mb-6">
+                        <p class="font-semibold text-lg">In the unfortunate event of death before the policy matures (at <span id="maturityAgeText">Age 80</span>)...</p>
+                        <div class="mt-4 inline-flex items-center">
+                            <span class="text-2xl mr-2">🤔</span>
+                            <p class="font-bold text-gray-700">Is there an Alternate Life Assured appointed?</p>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <div class="w-px bg-gray-300 h-6 mx-auto"></div>
-                        <div class="bg-green-100 border-2 border-dashed border-green-300 rounded-lg p-4 h-full">
-                            <p class="font-bold text-green-700">YES</p>
-                            <div class="text-3xl my-2">🤝</div>
-                            <h4 class="font-bold text-lg text-green-800">Compassionate Benefit is Payable</h4>
-                            <ul class="text-xs text-left mt-2 space-y-1 list-disc list-inside">
-                                <li>10% of Basic Annual Premium (capped at RM5,000)</li>
-                                <li>The policy continues for the Alternate Life Assured</li>
-                            </ul>
+                    <div class="flex justify-center mt-2">
+                        <div class="w-px bg-gray-300 h-6"></div>
+                    </div>
+                    <div class="flex justify-center mt-2">
+                        <div class="w-2/3 h-px bg-gray-300"></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mt-2">
+                        <div class="text-center">
+                            <div class="w-px bg-gray-300 h-6 mx-auto"></div>
+                            <div class="bg-red-100 border-2 border-dashed border-red-300 rounded-lg p-4 h-full">
+                                <p class="font-bold text-red-700">NO</p>
+                                <div class="text-3xl my-2">❤️</div>
+                                <h4 class="font-bold text-lg text-red-800">Death Benefit is Payable</h4>
+                                <p class="text-xs text-gray-600 mt-2">The HIGHER of:</p>
+                                <ul class="text-xs text-left mt-2 space-y-1 list-disc list-inside">
+                                    <li>105% of Total Basic Premium Paid (less FlexIncome paid OR</li>
+                                    <li>Guaranteed Surrender Value</li>
+                                </ul>
+                                <p class="text-xs text-gray-600 mt-1">+ Investment Account Value (if any)</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-px bg-gray-300 h-6 mx-auto"></div>
+                            <div class="bg-green-100 border-2 border-dashed border-green-300 rounded-lg p-4 h-full">
+                                <p class="font-bold text-green-700">YES</p>
+                                <div class="text-3xl my-2">🤝</div>
+                                <h4 class="font-bold text-lg text-green-800">Compassionate Benefit is Payable</h4>
+                                <ul class="text-xs text-left mt-2 space-y-1 list-disc list-inside">
+                                    <li>10% of Basic Annual Premium (capped at RM5,000)</li>
+                                    <li>The policy continues for the Alternate Life Assured</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -406,7 +418,6 @@
 
     </main>
     
-    <!-- FOOTER: UPDATED SECTION (VERSION 10.7) -->
     <footer class="bg-gray-800 text-white mt-12 p-8 text-center">
         <div class="max-w-4xl mx-auto text-sm text-gray-300 mb-6">
             <div class="flex justify-between">
@@ -422,7 +433,6 @@
         <p class="mt-2 text-sm text-gray-400">This illustrator is for illustrative purposes only. The actual policy benefits and terms are subject to the policy contract.</p>
     </footer>
 
-    <!-- SCRIPT UPDATED (VERSION 10.7) -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
@@ -564,6 +574,12 @@
                 return true;
             }
     
+            function triggerFlash(element) {
+                element.classList.remove('flash-update');
+                void element.offsetWidth; // Trigger reflow
+                element.classList.add('flash-update');
+            }
+
             function updateFlexAllocationDisplay(firstYearFlexIncome, totalFlexIncomeOverTerm) {
                 const payoutPercent = 100 - reinvestPercent;
                 const annualReinvestAmount = firstYearFlexIncome * (reinvestPercent / 100);
@@ -571,12 +587,24 @@
                 const totalReinvestAmount = totalFlexIncomeOverTerm * (reinvestPercent / 100);
                 const totalPayoutAmount = totalFlexIncomeOverTerm * (payoutPercent / 100);
 
-                payoutValueEl.textContent = formatter.format(annualPayoutAmount);
-                reinvestValueEl.textContent = formatter.format(annualReinvestAmount);
+                if (unformatNumber(payoutValueEl.textContent) !== annualPayoutAmount) {
+                    payoutValueEl.textContent = formatter.format(annualPayoutAmount);
+                    triggerFlash(payoutValueEl);
+                }
+                if (unformatNumber(reinvestValueEl.textContent) !== annualReinvestAmount) {
+                    reinvestValueEl.textContent = formatter.format(annualReinvestAmount);
+                    triggerFlash(reinvestValueEl);
+                }
                 payoutPercentageEl.textContent = `${payoutPercent}%`;
                 reinvestPercentageEl.textContent = `${reinvestPercent}%`;
-                totalPayoutValueEl.textContent = formatter.format(totalPayoutAmount);
-                totalReinvestValueEl.textContent = formatter.format(totalReinvestAmount);
+                if (unformatNumber(totalPayoutValueEl.textContent) !== totalPayoutAmount) {
+                    totalPayoutValueEl.textContent = formatter.format(totalPayoutAmount);
+                    triggerFlash(totalPayoutValueEl);
+                }
+                if (unformatNumber(totalReinvestValueEl.textContent) !== totalReinvestAmount) {
+                    totalReinvestValueEl.textContent = formatter.format(totalReinvestAmount);
+                    triggerFlash(totalReinvestValueEl);
+                }
                 decreaseReinvestBtn.disabled = reinvestPercent === 0;
                 increaseReinvestBtn.disabled = reinvestPercent === 100;
             }
@@ -626,8 +654,11 @@
                 const maturityPercent = maturityRules[coverageTerm]?.[paymentTerm];
                 if(maturityPercent && annualContribution > 0 && isValidContribution) {
                     const maturityBenefit = annualContribution * (maturityPercent / 100);
-                    guaranteedMaturityValueEl.textContent = formatter.format(maturityBenefit);
-
+                    if (unformatNumber(guaranteedMaturityValueEl.textContent) !== maturityBenefit) {
+                        guaranteedMaturityValueEl.textContent = formatter.format(maturityBenefit);
+                        triggerFlash(guaranteedMaturityValueEl);
+                    }
+                    
                     basicAnnualPremiumValueEl.textContent = formatter.format(annualContribution);
                     maturityPercentageValueEl.textContent = `${maturityPercent.toLocaleString()}%`;
                     maturityBreakdownEl.style.display = 'block';
