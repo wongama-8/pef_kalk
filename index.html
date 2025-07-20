@@ -9,7 +9,6 @@
     <!-- Visualization & Content Choices: Report Info: FlexIncome & Maturity Benefit rules. Goal: Calculate guaranteed outcomes based on user inputs. Viz/Presentation: Clean input forms and dynamic KPI cards for output. Interaction: User fills in policy details (term, premium, etc.). The app auto-calculates and displays the full FlexIncome schedule with RM values. The Maturity Benefit is a manual input for accuracy. Justification: This provides immediate, accurate feedback for financial planning discussions. The slider for FlexIncome allocation is kept to demonstrate the product's core feature conceptually. NO SVG/Mermaid used. No chart is used to avoid showing non-specific, potentially inaccurate projections. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -88,7 +87,6 @@
     <header class="bg-[#4A909E] text-white p-4 shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-xl md:text-2xl font-bold">Benefits Illustrator</h1>
-            <button id="savePptxBtn" class="bg-white text-[#4A909E] font-bold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Export to PowerPoint</button>
         </div>
     </header>
 
@@ -608,7 +606,7 @@
                 el.addEventListener('input', updateFullProposal);
             });
             
-            slider.addEventListener('input', () => {
+            const handleSliderUpdate = () => {
                 const annualContribution = unformatNumber(annualContributionEl.value) || 0;
                 const paymentTerm = parseInt(paymentTermEl.value);
                 const coverageTerm = parseInt(coverageTermEl.value);
@@ -626,55 +624,10 @@
                     const firstYearFlexIncome = annualContribution * (firstYearFlexPercent / 100);
                     updateSlider(firstYearFlexIncome);
                 }
-            });
+            };
 
-            document.getElementById('savePptxBtn').addEventListener('click', () => {
-                const pptx = new PptxGenJS();
-                const clientName = document.getElementById('clientName').value || 'Client';
-
-                let titleSlide = pptx.addSlide();
-                titleSlide.addText('PRUElite Flex Benefits Summary', { x: 0.5, y: 2.5, w: '90%', h: 1, align: 'center', fontSize: 36, color: '4A909E' });
-                titleSlide.addText(`Prepared for: ${clientName}`, { x: 0.5, y: 3.5, w: '90%', h: 1, align: 'center', fontSize: 24, color: '374151' });
-
-                let detailsSlide = pptx.addSlide();
-                detailsSlide.addText('Policy Details', { x: 0.5, y: 0.5, w: '90%', h: 1, fontSize: 24, bold: true, color: '4A909E' });
-                let detailsTable = [
-                    [{ text: 'Client & Policy Details', options: { bold: true, fill: 'F3F4F6', colspan: 2 } }, null],
-                    ['Name', clientName],
-                    ['Age Next Birthday (ANB)', clientANBEl.value],
-                    ['Payment Term', paymentTermEl.options[paymentTermEl.selectedIndex].text],
-                    ['Coverage Until Age', coverageTermEl.value],
-                    ['Policy Term', policyTermEl.value],
-                    ['Basic Annual Premium', formatter.format(unformatNumber(annualContributionEl.value))],
-                    ['Waiver Premium (Annual)', formatter.format(unformatNumber(waiverPremiumEl.value))],
-                    [{ text: 'Total Annual Premium', options: { bold: true } }, { text: totalAnnualPremiumEl.textContent, options: { bold: true } }]
-                ];
-                detailsSlide.addTable(detailsTable, { x: 0.5, y: 1.5, w: 9, rowH: 0.4, colW: [4, 5], border: { type: 'solid', pt: 1, color: 'D1D5DB' } });
-
-                let benefitsSlide = pptx.addSlide();
-                benefitsSlide.addText('Your Policy Benefits', { x: 0.5, y: 0.5, w: '90%', h: 1, fontSize: 24, bold: true, color: '4A909E' });
-                benefitsSlide.addText(`Guaranteed Maturity Benefit: ${guaranteedMaturityValueEl.textContent}`, { x: 0.5, y: 1.5, w: '90%', h: 0.5, fontSize: 18 });
-                
-                let flexIncomeTable = [[{ text: 'FlexIncome Schedule', options: { bold: true, fill: 'F3F4F6' } }, { text: 'Benefit', options: { bold: true, fill: 'F3F4F6' } }]];
-                document.querySelectorAll('#flexIncomeBreakdown div').forEach(item => {
-                    const yearAge = item.children[0].textContent;
-                    const valuePercent = item.children[1].textContent.replace(/\n/g, ' ');
-                    flexIncomeTable.push([yearAge, valuePercent]);
-                });
-                benefitsSlide.addTable(flexIncomeTable, { x: 0.5, y: 2.5, w: 9, rowH: 0.4, colW: [4, 5], border: { type: 'solid', pt: 1, color: 'D1D5DB' } });
-
-                let projectionsSlide = pptx.addSlide();
-                projectionsSlide.addText('Non-Guaranteed Maturity Projections', { x: 0.5, y: 0.5, w: '90%', h: 1, fontSize: 24, bold: true, color: '4A909E' });
-                let projectionsTable = [
-                    [{ text: 'Scenario', options: { bold: true, fill: 'F3F4F6' } }, { text: 'Projected Payout', options: { bold: true, fill: 'F3F4F6' } }],
-                    ['Scenario X', `RM ${scenarioXEl.value}`],
-                    ['Scenario Y', `RM ${scenarioYEl.value}`]
-                ];
-                projectionsSlide.addTable(projectionsTable, { x: 1.5, y: 1.5, w: 7, rowH: 0.5, colW: [3, 4], border: { type: 'solid', pt: 1, color: 'D1D5DB' } });
-
-
-                pptx.writeFile({ fileName: `PRUElite_Flex_Summary_${clientName.replace(/ /g, '_')}.pptx` });
-            });
+            slider.addEventListener('input', handleSliderUpdate);
+            slider.addEventListener('touchmove', handleSliderUpdate);
             
             updateFullProposal();
         });
