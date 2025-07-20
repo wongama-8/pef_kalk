@@ -9,6 +9,7 @@
     <!-- Visualization & Content Choices: Report Info: FlexIncome & Maturity Benefit rules. Goal: Calculate guaranteed outcomes based on user inputs. Viz/Presentation: Clean input forms and dynamic KPI cards for output. Interaction: User fills in policy details (term, premium, etc.). The app auto-calculates and displays the full FlexIncome schedule with RM values. The Maturity Benefit is a manual input for accuracy. Justification: This provides immediate, accurate feedback for financial planning discussions. The slider for FlexIncome allocation is kept to demonstrate the product's core feature conceptually. NO SVG/Mermaid used. No chart is used to avoid showing non-specific, potentially inaccurate projections. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -87,6 +88,7 @@
     <header class="bg-[#4A909E] text-white p-4 shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-xl md:text-2xl font-bold">Benefits Illustrator</h1>
+            <button id="savePptxBtn" class="bg-white text-[#4A909E] font-bold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Export to PowerPoint</button>
         </div>
     </header>
 
