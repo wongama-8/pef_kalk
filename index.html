@@ -13,38 +13,8 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FDF8F0;
-            color: #374151;
-        }
-        .slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            background: #4A909E;
-            cursor: pointer;
-            border-radius: 50%;
-            border: 4px solid #FDF8F0;
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
-        }
-        .slider-track {
-            width: 100%;
-            height: 8px;
-            cursor: pointer;
-            background: #D1D5DB;
-            border-radius: 9999px;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            margin-top: -8px;
-        }
-        input[type=range]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: #4A909E;
-            cursor: pointer;
-            border-radius: 50%;
-            border: 4px solid #FDF8F0;
+            background-color: #FDF8F0; /* Beige */
+            color: #374151; /* Dark Gray */
         }
         .form-input, .form-select {
             width: 100%;
@@ -71,6 +41,11 @@
             background-color: #E5E7EB;
             cursor: not-allowed;
         }
+        .form-select:disabled {
+            background-color: #E5E7EB;
+            cursor: not-allowed;
+            color: #9CA3AF;
+        }
         .error-message {
             display: none;
             color: #DC2626;
@@ -79,6 +54,45 @@
         }
         .input-with-prefix .form-input {
             padding-left: 2.5rem;
+        }
+        .reinvest-btn {
+            width: 36px;
+            height: 36px;
+            background-color: #4A909E;
+            color: white;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: 2px solid #FDF8F0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard */
+        }
+        .reinvest-btn:hover {
+            background-color: #3a7580;
+        }
+        .reinvest-btn:disabled {
+            background-color: #9CA3AF;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .footer-input {
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #9CA3AF;
+            color: white;
+            padding: 0.25rem 0;
+            width: 200px;
+        }
+        .footer-input:focus {
+            outline: none;
+            border-bottom-color: white;
         }
     </style>
 </head>
@@ -176,66 +190,89 @@
         </section>
         
         <section id="how-it-works" class="mb-12 bg-white rounded-lg shadow-lg p-8">
-            <h3 class="text-2xl font-bold text-center mb-2">Part 2: FlexIncome Allocation</h3>
+            <h3 class="text-2xl font-bold text-center mb-2">Part 2: FlexIncome Allocation & Breakdown</h3>
              <p class="text-md text-gray-600 max-w-3xl mx-auto text-center mb-8">
                 Customise your FlexIncome
             </p>
-            <div class="max-w-2xl mx-auto">
-                <div class="mb-6">
-                    <input type="range" min="0" max="100" value="50" class="slider-track" id="flexIncomeSlider">
-                </div>
-                <div class="flex justify-between items-start gap-4">
-                    <div class="w-1/2 bg-gray-50 p-4 rounded-lg text-center">
-                        <h4 class="font-bold text-lg text-[#4A909E]">💰 Regular payout to you <span class="text-xs font-normal text-gray-500">(Annual)</span></h4>
-                        <p class="text-2xl font-bold" id="payoutValue">RM 0</p>
-                        <p class="font-bold text-xl" id="payoutPercentage">50%</p>
+            <div class="max-w-3xl mx-auto">
+                <div class="flex justify-between items-stretch gap-4">
+                    <div class="w-1/2 bg-gray-50 p-4 rounded-lg text-center flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-lg text-[#4A909E]">💰 Regular payout to you</h4>
+                            <p class="text-2xl font-bold" id="payoutValue">RM 0</p>
+                             <div class="flex items-center justify-center my-2 h-[36px]">
+                                <p class="font-bold text-xl" id="payoutPercentage">50%</p>
+                             </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Total Received: <span id="totalPayoutValue" class="font-bold">RM 0</span></p>
                     </div>
-                    <div class="w-1/2 bg-gray-50 p-4 rounded-lg text-center">
-                        <h4 class="font-bold text-lg text-[#4A909E]">📈 Reinvest for Growth <span class="text-xs font-normal text-gray-500">(Annual)</span></h4>
-                        <p class="text-2xl font-bold" id="reinvestValue">RM 0</p>
-                        <p class="font-bold text-xl" id="reinvestPercentage">50%</p>
+                    <div class="w-1/2 bg-gray-50 p-4 rounded-lg text-center flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-lg text-[#4A909E]">📈 Reinvest for Growth</h4>
+                            <p class="text-2xl font-bold" id="reinvestValue">RM 0</p>
+                            <div class="flex items-center justify-center gap-4 my-2 h-[36px]">
+                                <button id="decreaseReinvest" class="reinvest-btn">-</button>
+                                <p class="font-bold text-xl w-16 text-center" id="reinvestPercentage">50%</p>
+                                <button id="increaseReinvest" class="reinvest-btn">+</button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Total Reinvested: <span id="totalReinvestValue" class="font-bold">RM 0</span></p>
+                    </div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-6">*The allocation between payout and reinvestment can be changed at any time to suit your needs.</p>
+
+                <div class="mt-12">
+                     <h4 class="text-xl font-bold text-center text-[#4A909E] mb-4">FlexIncome Annual Breakdown</h4>
+                    <div class="bg-teal-50 p-6 rounded-lg border-2 border-dashed border-[#4A909E]">
+                        <div id="flexIncomeBreakdown" class="mt-4">
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="calculated-benefits" class="mb-12">
+        <section id="maturity-benefit" class="mb-12">
              <h3 class="text-2xl font-bold text-center mb-8">Part 3: Your Policy Benefits</h3>
              <div class="max-w-2xl mx-auto space-y-6">
-                <div class="bg-teal-50 p-6 rounded-lg border-2 border-dashed border-[#4A909E]">
-                    <h4 class="text-[#4A909E] font-semibold text-center">FlexIncome</h4>
-                    <div id="flexIncomeBreakdown" class="mt-4">
-                        <!-- Dynamic content will be injected here -->
-                    </div>
-                </div>
                 <div class="bg-teal-50 p-6 rounded-lg text-center border-2 border-dashed border-[#4A909E]">
                     <h4 class="text-[#4A909E] font-semibold">Guaranteed Maturity Benefit</h4>
                     <p id="guaranteedMaturityValue" class="text-3xl font-bold text-teal-800 mt-2">RM 0</p>
                     <p class="text-sm text-gray-500 mt-1" id="guaranteedMaturityTerm">(At Age 80)</p>
+                    <div id="maturityBreakdown" class="text-xs text-gray-600 mt-4 pt-4 border-t border-dashed border-teal-200 text-left">
+                        <div class="flex justify-between">
+                            <span>Basic Annualised Premium:</span>
+                            <span id="basicAnnualPremiumValue" class="font-semibold">RM 0</span>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <span>Maturity Benefit Rate:</span>
+                            <span id="maturityPercentageValue" class="font-semibold">0%</span>
+                        </div>
+                    </div>
                 </div>
              </div>
         </section>
 
         <section id="maturity-projections" class="mb-12">
-            <h3 class="text-2xl font-bold text-center mb-8">Part 4: Non-Guaranteed Maturity Projections</h3>
+            <h3 class="text-2xl font-bold text-center mb-8">Part 4: Summary of Your Potential Maturity Payout</h3>
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
-                <p class="text-center text-gray-600 mb-6">This includes Guaranteed Benefit + Non-Guaranteed Projections*. Refer Table 1a</p>
+                <p class="text-center text-gray-600 mb-6">The values below are projections that include your Guaranteed Maturity Benefit plus a non-guaranteed amount based on different fund performance scenarios.*</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="scenarioX" class="form-label text-center">Projected Payout (Scenario X)</label>
+                        <label for="scenarioX" class="form-label text-center">Projected Payout (Low Scenario)</label>
                         <div class="relative mt-1">
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">RM</span>
                             <input type="text" id="scenarioX" class="form-input text-center font-bold text-xl" value="">
                         </div>
                     </div>
                     <div>
-                        <label for="scenarioY" class="form-label text-center">Projected Payout (Scenario Y)</label>
+                        <label for="scenarioY" class="form-label text-center">Projected Payout (High Scenario)</label>
                         <div class="relative mt-1">
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">RM</span>
                             <input type="text" id="scenarioY" class="form-input text-center font-bold text-xl" value="">
                         </div>
                     </div>
                 </div>
+                 <p class="text-center text-xs text-gray-500 mt-6">*The non-guaranteed amount is dependent on the performance of the underlying investment-linked funds. Please refer to the official Product Illustration for details.</p>
             </div>
         </section>
 
@@ -319,9 +356,10 @@
             </div>
         </section>
 
+        <!-- PART 6: UPDATED SECTION (VERSION 10.7) -->
         <section id="safety-net">
             <h3 class="text-2xl font-bold text-center mb-8">Part 6: In Case of the Unexpected</h3>
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
+            <div class="bg-white p-6 pb-10 rounded-lg shadow-lg max-w-4xl mx-auto">
                 <div class="text-center mb-6">
                     <p class="font-semibold text-lg">In the unfortunate event of death before the policy matures (at <span id="maturityAgeText">Age 80</span>)...</p>
                     <div class="mt-4 inline-flex items-center">
@@ -368,20 +406,33 @@
 
     </main>
     
+    <!-- FOOTER: UPDATED SECTION (VERSION 10.7) -->
     <footer class="bg-gray-800 text-white mt-12 p-8 text-center">
+        <div class="max-w-4xl mx-auto text-sm text-gray-300 mb-6">
+            <div class="flex justify-between">
+                <div>
+                    Prepared for: <span id="preparedForName" class="font-semibold">Client</span>
+                </div>
+                <div>
+                    Prepared by: <input type="text" id="preparedByName" class="footer-input" placeholder="Your Name">
+                </div>
+            </div>
+        </div>
         <p>This plan is a long-term financial commitment designed to meet your specific needs for growth and security.</p>
         <p class="mt-2 text-sm text-gray-400">This illustrator is for illustrative purposes only. The actual policy benefits and terms are subject to the policy contract.</p>
     </footer>
 
-
+    <!-- SCRIPT UPDATED (VERSION 10.7) -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
+            let reinvestPercent = 50;
+
             const maturityRules = {
                 80: { 5: 450, 10: 850, 20: 1200 },
                 100: { 5: 500, 10: 1000, 20: 1500 }
             };
-
+    
             const flexIncomeRules = {
                 age80: {
                     entry_1_50: {
@@ -402,9 +453,10 @@
                     }
                 }
             };
-
+    
             const minimums = { 5: 30000, 10: 12000, 20: 12000 };
             
+            const clientNameEl = document.getElementById('clientName');
             const clientDOBEl = document.getElementById('clientDOB');
             const clientANBEl = document.getElementById('clientANB');
             const paymentTermEl = document.getElementById('paymentTerm');
@@ -413,30 +465,50 @@
             const annualContributionEl = document.getElementById('annualContribution');
             const waiverPremiumEl = document.getElementById('waiverPremium');
             const contributionErrorEl = document.getElementById('contributionError');
-            const slider = document.getElementById('flexIncomeSlider');
             
             const totalAnnualPremiumEl = document.getElementById('totalAnnualPremium');
             const halfYearlyDisplayEl = document.getElementById('halfYearlyDisplay');
             const quarterlyDisplayEl = document.getElementById('quarterlyDisplay');
             const monthlyDisplayEl = document.getElementById('monthlyDisplay');
-
+    
             const guaranteedMaturityValueEl = document.getElementById('guaranteedMaturityValue');
             const guaranteedMaturityTermEl = document.getElementById('guaranteedMaturityTerm');
+            const maturityBreakdownEl = document.getElementById('maturityBreakdown');
+            const basicAnnualPremiumValueEl = document.getElementById('basicAnnualPremiumValue');
+            const maturityPercentageValueEl = document.getElementById('maturityPercentageValue');
+
             const flexIncomeBreakdownEl = document.getElementById('flexIncomeBreakdown');
             
             const payoutValueEl = document.getElementById('payoutValue');
             const reinvestValueEl = document.getElementById('reinvestValue');
             const payoutPercentageEl = document.getElementById('payoutPercentage');
             const reinvestPercentageEl = document.getElementById('reinvestPercentage');
+            const decreaseReinvestBtn = document.getElementById('decreaseReinvest');
+            const increaseReinvestBtn = document.getElementById('increaseReinvest');
+            const totalPayoutValueEl = document.getElementById('totalPayoutValue');
+            const totalReinvestValueEl = document.getElementById('totalReinvestValue');
             
             const scenarioXEl = document.getElementById('scenarioX');
             const scenarioYEl = document.getElementById('scenarioY');
             const maturityAgeTextEl = document.getElementById('maturityAgeText');
-
+            const preparedForNameEl = document.getElementById('preparedForName');
+    
             const formatter = new Intl.NumberFormat('en-MY', { style: 'currency', currency: 'MYR', minimumFractionDigits: 0, maximumFractionDigits: 0 });
             const numFormatter = new Intl.NumberFormat('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             const currencyFormatter2dp = new Intl.NumberFormat('en-MY', { style: 'currency', currency: 'MYR', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
+    
+            function validateCoverageOptions() {
+                const anb = parseInt(clientANBEl.value) || 0;
+                const coverage80Option = coverageTermEl.querySelector('option[value="80"]');
+                coverage80Option.disabled = false;
+                if (anb >= 51) {
+                    coverage80Option.disabled = true;
+                    if (coverageTermEl.value === '80') {
+                        coverageTermEl.value = '100';
+                    }
+                }
+            }
+    
             function getFlexIncomePercent(year, rules) {
                 if (!rules || !rules.periods) return 0;
                 for (const period of rules.periods) {
@@ -446,7 +518,7 @@
                 }
                 return 0;
             }
-
+    
             function calculateANB(dob) {
                 if (!dob) return '';
                 const today = new Date();
@@ -468,18 +540,18 @@
                 }
                 e.target.value = parts.join('.');
             }
-
+    
             function unformatNumber(value) {
                 return parseFloat(value.replace(/,/g, '')) || 0;
             }
-
+    
             function validateContribution() {
                 const paymentTerm = parseInt(paymentTermEl.value);
                 const annualPremium = unformatNumber(annualContributionEl.value);
                 const min = minimums[paymentTerm];
-
+    
                 annualContributionEl.placeholder = `Min. RM ${numFormatter.format(min)}`;
-
+    
                 if (annualPremium > 0 && annualPremium < min) {
                     contributionErrorEl.textContent = `Minimum for a ${paymentTerm}-year term is ${formatter.format(min)}.`;
                     contributionErrorEl.style.display = 'block';
@@ -491,17 +563,36 @@
                 annualContributionEl.classList.remove('border-red-500');
                 return true;
             }
+    
+            function updateFlexAllocationDisplay(firstYearFlexIncome, totalFlexIncomeOverTerm) {
+                const payoutPercent = 100 - reinvestPercent;
+                const annualReinvestAmount = firstYearFlexIncome * (reinvestPercent / 100);
+                const annualPayoutAmount = firstYearFlexIncome * (payoutPercent / 100);
+                const totalReinvestAmount = totalFlexIncomeOverTerm * (reinvestPercent / 100);
+                const totalPayoutAmount = totalFlexIncomeOverTerm * (payoutPercent / 100);
+
+                payoutValueEl.textContent = formatter.format(annualPayoutAmount);
+                reinvestValueEl.textContent = formatter.format(annualReinvestAmount);
+                payoutPercentageEl.textContent = `${payoutPercent}%`;
+                reinvestPercentageEl.textContent = `${reinvestPercent}%`;
+                totalPayoutValueEl.textContent = formatter.format(totalPayoutAmount);
+                totalReinvestValueEl.textContent = formatter.format(totalReinvestAmount);
+                decreaseReinvestBtn.disabled = reinvestPercent === 0;
+                increaseReinvestBtn.disabled = reinvestPercent === 100;
+            }
 
             function updateFullProposal() {
-                const isValid = validateContribution();
-
+                validateCoverageOptions(); 
+                const isValidContribution = validateContribution();
+    
                 const anb = parseInt(clientANBEl.value) || 0;
                 const paymentTerm = parseInt(paymentTermEl.value);
                 const coverageTerm = parseInt(coverageTermEl.value);
                 const annualContribution = unformatNumber(annualContributionEl.value);
                 const waiverPremium = unformatNumber(waiverPremiumEl.value);
-
                 const totalAnnualPremium = annualContribution + waiverPremium;
+    
+                preparedForNameEl.textContent = clientNameEl.value || 'Client';
 
                 totalAnnualPremiumEl.textContent = currencyFormatter2dp.format(totalAnnualPremium);
                 monthlyDisplayEl.textContent = `RM ${numFormatter.format(totalAnnualPremium / 12)}`;
@@ -510,12 +601,21 @@
                 
                 const policyTerm = coverageTerm - anb;
                 policyTermEl.value = policyTerm > 0 ? `${policyTerm} years` : '';
-
-                let rulesKey = coverageTerm === 100 ? 'age100' : 'age80';
+    
+                let rulesKey = `age${coverageTerm}`;
                 let entryKey;
-                if (anb >= 1 && anb <= 50) entryKey = 'entry_1_50';
-                if (anb >= 1 && anb <= 55 && coverageTerm === 100) entryKey = 'entry_1_55';
-                if (anb >= 56 && anb <= 70 && coverageTerm === 100) entryKey = 'entry_56_70';
+    
+                if (coverageTerm == 80) {
+                    if (anb >= 1 && anb <= 50) {
+                        entryKey = 'entry_1_50';
+                    }
+                } else if (coverageTerm == 100) {
+                    if (anb >= 1 && anb <= 55) {
+                        entryKey = 'entry_1_55';
+                    } else if (anb >= 56 && anb <= 70) {
+                        entryKey = 'entry_56_70';
+                    }
+                }
                 
                 const rules = flexIncomeRules[rulesKey]?.[entryKey]?.[paymentTerm];
                 
@@ -524,29 +624,42 @@
                 flexIncomeBreakdownEl.innerHTML = '';
                 
                 const maturityPercent = maturityRules[coverageTerm]?.[paymentTerm];
-                if(maturityPercent && annualContribution > 0) {
+                if(maturityPercent && annualContribution > 0 && isValidContribution) {
                     const maturityBenefit = annualContribution * (maturityPercent / 100);
                     guaranteedMaturityValueEl.textContent = formatter.format(maturityBenefit);
+
+                    basicAnnualPremiumValueEl.textContent = formatter.format(annualContribution);
+                    maturityPercentageValueEl.textContent = `${maturityPercent.toLocaleString()}%`;
+                    maturityBreakdownEl.style.display = 'block';
+
                 } else {
                     guaranteedMaturityValueEl.textContent = 'RM 0';
+                    maturityBreakdownEl.style.display = 'none';
                 }
-
-
-                if (!rules || !anb || !annualContribution || !isValid) {
-                    flexIncomeBreakdownEl.innerHTML = '<p class="text-gray-500 text-center">Please complete all inputs correctly.</p>';
-                    updateSlider(0);
+    
+                let totalFlexIncomeOverTerm = 0;
+                if (rules && policyTerm > 0 && annualContribution > 0 && isValidContribution) {
+                    for (let year = 1; year <= policyTerm; year++) {
+                        const yearlyPercent = getFlexIncomePercent(year, rules);
+                        totalFlexIncomeOverTerm += annualContribution * (yearlyPercent / 100);
+                    }
+                }
+    
+                if (!rules || !anb || !annualContribution || !isValidContribution) {
+                    flexIncomeBreakdownEl.innerHTML = '<p class="text-gray-500 text-center">Please complete all inputs correctly to see the benefits.</p>';
+                    updateFlexAllocationDisplay(0, 0);
                     return;
                 }
-
+    
                 rules.periods.forEach(period => {
                     if (period.from > policyTerm) return;
-
+    
                     const div = document.createElement('div');
                     const flexIncomeValue = annualContribution * (period.percent / 100);
                     div.className = 'flex justify-between items-center py-2 border-b border-teal-200 last:border-b-0';
                     
                     const displayTo = Math.min(period.to, policyTerm);
-
+    
                     let yearText = `Policy Year ${period.from}`;
                     if (period.from !== displayTo) {
                        yearText = `Policy Years ${period.from}-${displayTo}`;
@@ -556,7 +669,7 @@
                      if (period.from !== displayTo) {
                        ageText = `Age ${anb + period.from}-${anb + displayTo}`;
                     }
-
+    
                     div.innerHTML = `
                         <span class="text-gray-600">${yearText} / ${ageText}</span>
                         <div class="text-right">
@@ -565,24 +678,13 @@
                         </div>`;
                     flexIncomeBreakdownEl.appendChild(div);
                 });
-
+    
                 const firstYearFlexPercent = getFlexIncomePercent(1, rules);
                 const firstYearFlexIncome = annualContribution * (firstYearFlexPercent / 100);
-                updateSlider(firstYearFlexIncome);
+                updateFlexAllocationDisplay(firstYearFlexIncome, totalFlexIncomeOverTerm);
             }
-
-            function updateSlider(totalFlexIncome) {
-                const reinvestPercent = parseInt(slider.value);
-                const payoutPercent = 100 - reinvestPercent;
-                const reinvestAmount = totalFlexIncome * (reinvestPercent / 100);
-                const payoutAmount = totalFlexIncome - reinvestAmount;
-
-                payoutValueEl.textContent = formatter.format(payoutAmount);
-                reinvestValueEl.textContent = formatter.format(reinvestAmount);
-                payoutPercentageEl.textContent = `${payoutPercent}%`;
-                reinvestPercentageEl.textContent = `${reinvestPercent}%`;
-            }
-
+    
+            clientNameEl.addEventListener('input', updateFullProposal);
             clientDOBEl.addEventListener('input', (e) => {
                 const anb = calculateANB(e.target.value);
                 if (anb) {
@@ -601,33 +703,24 @@
             });
             scenarioXEl.addEventListener('input', formatNumberInput);
             scenarioYEl.addEventListener('input', formatNumberInput);
-
+    
             [clientANBEl, paymentTermEl, coverageTermEl].forEach(el => {
                 el.addEventListener('input', updateFullProposal);
             });
             
-            const handleSliderUpdate = () => {
-                const annualContribution = unformatNumber(annualContributionEl.value) || 0;
-                const paymentTerm = parseInt(paymentTermEl.value);
-                const coverageTerm = parseInt(coverageTermEl.value);
-                const anb = parseInt(clientANBEl.value) || 0;
-                
-                let rulesKey = coverageTerm === 100 ? 'age100' : 'age80';
-                let entryKey;
-                if (anb >= 1 && anb <= 50) entryKey = 'entry_1_50';
-                if (anb >= 1 && anb <= 55 && coverageTerm === 100) entryKey = 'entry_1_55';
-                if (anb >= 56 && anb <= 70 && coverageTerm === 100) entryKey = 'entry_56_70';
-
-                const rules = flexIncomeRules[rulesKey]?.[entryKey]?.[paymentTerm];
-                if(rules) {
-                    const firstYearFlexPercent = getFlexIncomePercent(1, rules);
-                    const firstYearFlexIncome = annualContribution * (firstYearFlexPercent / 100);
-                    updateSlider(firstYearFlexIncome);
+            decreaseReinvestBtn.addEventListener('click', () => {
+                if (reinvestPercent > 0) {
+                    reinvestPercent -= 10;
+                    updateFullProposal();
                 }
-            };
+            });
 
-            slider.addEventListener('input', handleSliderUpdate);
-            slider.addEventListener('touchmove', handleSliderUpdate);
+            increaseReinvestBtn.addEventListener('click', () => {
+                if (reinvestPercent < 100) {
+                    reinvestPercent += 10;
+                    updateFullProposal();
+                }
+            });
             
             updateFullProposal();
         });
