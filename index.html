@@ -580,6 +580,7 @@
                 element.classList.add('flash-update');
             }
 
+            // Updated function to fix the bug
             function updateFlexAllocationDisplay(firstYearFlexIncome, totalFlexIncomeOverTerm) {
                 const payoutPercent = 100 - reinvestPercent;
                 const annualReinvestAmount = firstYearFlexIncome * (reinvestPercent / 100);
@@ -587,24 +588,25 @@
                 const totalReinvestAmount = totalFlexIncomeOverTerm * (reinvestPercent / 100);
                 const totalPayoutAmount = totalFlexIncomeOverTerm * (payoutPercent / 100);
 
-                if (unformatNumber(payoutValueEl.textContent) !== annualPayoutAmount) {
-                    payoutValueEl.textContent = formatter.format(annualPayoutAmount);
-                    triggerFlash(payoutValueEl);
-                }
-                if (unformatNumber(reinvestValueEl.textContent) !== annualReinvestAmount) {
-                    reinvestValueEl.textContent = formatter.format(annualReinvestAmount);
-                    triggerFlash(reinvestValueEl);
-                }
+                // Always update and flash payout value
+                payoutValueEl.textContent = formatter.format(annualPayoutAmount);
+                triggerFlash(payoutValueEl);
+                
+                // Always update and flash reinvest value
+                reinvestValueEl.textContent = formatter.format(annualReinvestAmount);
+                triggerFlash(reinvestValueEl);
+                
                 payoutPercentageEl.textContent = `${payoutPercent}%`;
                 reinvestPercentageEl.textContent = `${reinvestPercent}%`;
-                if (unformatNumber(totalPayoutValueEl.textContent) !== totalPayoutAmount) {
-                    totalPayoutValueEl.textContent = formatter.format(totalPayoutAmount);
-                    triggerFlash(totalPayoutValueEl);
-                }
-                if (unformatNumber(totalReinvestValueEl.textContent) !== totalReinvestAmount) {
-                    totalReinvestValueEl.textContent = formatter.format(totalReinvestAmount);
-                    triggerFlash(totalReinvestValueEl);
-                }
+                
+                // Always update and flash total payout value
+                totalPayoutValueEl.textContent = formatter.format(totalPayoutAmount);
+                triggerFlash(totalPayoutValueEl);
+                
+                // Always update and flash total reinvest value
+                totalReinvestValueEl.textContent = formatter.format(totalReinvestAmount);
+                triggerFlash(totalReinvestValueEl);
+                
                 decreaseReinvestBtn.disabled = reinvestPercent === 0;
                 increaseReinvestBtn.disabled = reinvestPercent === 100;
             }
@@ -678,7 +680,8 @@
     
                 if (!rules || !anb || !annualContribution || !isValidContribution) {
                     flexIncomeBreakdownEl.innerHTML = '<p class="text-gray-500 text-center">Please complete all inputs correctly to see the benefits.</p>';
-                    updateFlexAllocationDisplay(0, 0);
+                    // Ensure display is reset to 0 when inputs are not valid
+                    updateFlexAllocationDisplay(0, 0); 
                     return;
                 }
     
@@ -758,3 +761,5 @@
     </script>
 </body>
 </html>
+
+
